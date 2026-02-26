@@ -10,10 +10,9 @@ target "default" {
 	}
     dockerfile = "Dockerfile"
     platforms = [
-		"linux/amd64", 
-		"linux/arm64"
+		"linux/amd64",
  	]
 	tags = [
-		"ghcr.io/design-group/${BASE_IMAGE_NAME}:${version}"
+		"ghcr.io/huntermatuse/${BASE_IMAGE_NAME}:${version}"
 	]
 }
