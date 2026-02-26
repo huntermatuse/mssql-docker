@@ -1,12 +1,12 @@
-# ghcr.io/design-group/mssql-docker
+# ghcr.io/huntermatuse/mssql-docker
 
-## Design Group MSSQL Image
+## MSSQL Docker Image
 
 The purpose of this image is to provide a quick way to spin up docker containers that include some necessary creature comforts for automatically spinning up databases, restoring backups, and version controlling sql scripts.
 
-This image is automatically built for the latest `azure-sql-edge` version on both arm and amd, new versions will be updated, but any features are subject to change with later versions. Upon a new pull request, if a valid build file is modified, it will trigger a build test pipeline that verifies the image still operates as expected.
+This image is automatically built for the latest `mssql/server:2025` version on amd64. New versions will be updated, but any features are subject to change with later versions. Upon a new pull request, if a valid build file is modified, it will trigger a build test pipeline that verifies the image still operates as expected.
 
-If using a windows device, you will want to [Set up WSL](https://github.com/design-group/ignition-docker/blob/master/docs/setting-up-wsl.md)
+If using a Windows device, you will want to [Set up WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
 
 ___
 
@@ -17,14 +17,14 @@ ___
 1. This docker image is uploaded to the github container registry, and can be pulled with the following:
 
 ```sh
-docker pull ghcr.io/design-group/mssql-docker:latest
+docker pull ghcr.io/huntermatuse/mssql-docker:latest
 ```
 
 ___
 
 ## Customizations
 
-This is a derived image of the microsoft `azure-sql-edge` image. Please see the [Azure SQL Edge Docker Hub](https://hub.docker.com/_/microsoft-azure-sql-edge?tab=description) for more information on the base image. This image should be able to take all arguments provided by the base image, but has not been tested.
+This is a derived image of the Microsoft `mssql/server:2025` image. Please see the [Microsoft SQL Server on Docker Hub](https://hub.docker.com/r/microsoft/mssql-server) for more information on the base image. This image should be able to take all arguments provided by the base image, but has not been tested.
 
 ### Simulated Data Insertion
 
@@ -36,7 +36,7 @@ This image also preloads the following environment variables by default:
 | Environment Variable | Value |
 | --- | --- |
 | `ACCEPT_EULA` | `Y` |
-| `SA_PASSWORD` | `P@ssword1!` |
+| `SA_PASSWORD` | `Str0ng!Passw0rd` |
 | `MSSQL_PID` | `Developer` |
 | `INSERT_SIMULATED_DATA` | `false` |
 
@@ -47,7 +47,7 @@ ___
 ```yaml
 services:
   mssql:
-    image: ghcr.io/design-group/mssql-docker:latest
+    image: ghcr.io/huntermatuse/mssql-docker:latest
     ports:
     - "1433:1433"
     environment:
@@ -66,7 +66,7 @@ This repository uses [pre-commit](https://pre-commit.com/) to enforce code style
 
 ### Requests
 
-If you have any requests for additional features, please feel free to [open an issue](https://github.com/design-group/mssql-docker/issues/new/choose) or submit a pull request.
+If you have any requests for additional features, please feel free to [open an issue](https://github.com/huntermatuse/mssql-docker/issues/new/choose) or submit a pull request.
 
 ### Shoutout
 
