@@ -62,4 +62,4 @@ jobs:
           *.cache-from=type=gha
           *.cache-to=type=gha,mode=max
         targets: 'default'
-        push: ${{ github.event.inputs.push }}
+        push: ${{ github.event.inputs.push || true }}
