@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/mssql/server:2025-latest
+FROM --platform=linux/amd64 mcr.microsoft.com/mssql/server:2025-latest
 
 USER root
 
@@ -12,6 +12,7 @@ ENV INSERT_SIMULATED_DATA=${INSERT_SIMULATED_DATA:-false}
 COPY docker-entrypoint.sh /
 COPY healthcheck.sh /
 COPY scripts /scripts
+RUN sed -i 's/\r$//' /docker-entrypoint.sh /healthcheck.sh && chmod +x /docker-entrypoint.sh /healthcheck.sh
 
 # Set a Simple Health Check
 HEALTHCHECK \
