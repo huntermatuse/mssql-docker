@@ -1,9 +1,9 @@
-FROM mcr.microsoft.com/azure-sql-edge
+FROM mcr.microsoft.com/mssql/server:2025-latest
 
 USER root
 
 ENV ACCEPT_EULA=Y
-ENV SA_PASSWORD=${SA_PASSWORD:-P@ssword1!}
+ENV SA_PASSWORD=${SA_PASSWORD:-Str0ng!Passw0rd}
 ENV SQLCMDPASSWORD=${SA_PASSWORD}
 ENV MSSQL_PID=${MSSQL_PID:-Developer}
 ENV INSERT_SIMULATED_DATA=${INSERT_SIMULATED_DATA:-false}
@@ -12,15 +12,6 @@ ENV INSERT_SIMULATED_DATA=${INSERT_SIMULATED_DATA:-false}
 COPY docker-entrypoint.sh /
 COPY healthcheck.sh /
 COPY scripts /scripts
-
-COPY sqlcmd /sqlcmd
-
-# If the architecture is arm copy in the correct sqlcmd
-RUN if [ "$(uname -m)" = "aarch64" ]; then \
-	cp sqlcmd/linux-arm64 /usr/bin/sqlcmd; \
-	elif [ "$(uname -m)" = "x86_64" ]; then \
-	cp sqlcmd/linux-x64 /usr/bin/sqlcmd; \
-	fi
 
 # Set a Simple Health Check
 HEALTHCHECK \
@@ -31,7 +22,7 @@ HEALTHCHECK \
     CMD /healthcheck.sh
 
 # Put CLI tools on the PATH
-ENV PATH /opt/mssql-tools/bin:$PATH
+ENV PATH=/opt/mssql-tools18/bin:$PATH
 
 # Create some base paths and place our provisioning script
 RUN mkdir /docker-entrypoint-initdb.d && \
