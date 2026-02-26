@@ -10,7 +10,7 @@ execute_startup_scripts() {
 	for f in /docker-entrypoint-initdb.d/*; do
 		case "$f" in
 			*.sh)     echo "$0: running $f"; . "$f" ;;
-			*.sql)    echo "$0: running $f"; sqlcmd -S localhost -U sa -i "$f"; echo ;;
+			*.sql)    echo "$0: running $f"; sqlcmd -S localhost -U sa -C -i "$f"; echo ;;
 			*)        echo "$0: ignoring $f" ;;
 		esac
 		echo
@@ -28,7 +28,7 @@ copy_simulation_scripts() {
 		for f in /simulated-data/*; do
 			case "$f" in
 				*.sh)     echo "$0: running $f"; . "$f" ;;
-				*.sql)    echo "$0: running $f"; sqlcmd -S localhost -U sa -i "$f"; echo ;;
+				*.sql)    echo "$0: running $f"; sqlcmd -S localhost -U sa -C -i "$f"; echo ;;
 				*)        echo "$0: ignoring $f" ;;
 			esac
 			echo
@@ -43,7 +43,7 @@ restore_database_backups() {
 	# Restore any database backups located in the /backups directory
 	for f in /backups/*; do
 		case "$f" in
-			*.bak)    echo "$0: restoring $f"; sqlcmd -S localhost -U sa -i /scripts/restore-database.sql -v databaseName="$(basename "$f" .bak)" -v databaseBackup="$f"; echo ;;
+			*.bak)    echo "$0: restoring $f"; sqlcmd -S localhost -U sa -C -i /scripts/restore-database.sql -v databaseName="$(basename "$f" .bak)" -v databaseBackup="$f"; echo ;;
 			*)        echo "$0: ignoring $f" ;;
 		esac
 		echo
@@ -66,7 +66,7 @@ if [ ! -f "${MSSQL_BASE}/.docker-init-complete" ]; then
     # Wait up to 60 seconds for database initialization to complete
     echo "Database Startup In Progress..."
     for ((i=${MSSQL_STARTUP_DELAY:=60};i>0;i--)); do
-        if sqlcmd -S localhost -U sa -l 1 -V 16 -Q "SELECT 1" &> /dev/null; then
+        if sqlcmd -S localhost -U sa -C -l 1 -V 16 -Q "SELECT 1" &> /dev/null; then
             echo "Database healthy, proceeding with provisioning..."
             break
         fi
