@@ -8,6 +8,16 @@ ENV SQLCMDPASSWORD=${SA_PASSWORD}
 ENV MSSQL_PID=${MSSQL_PID:-Developer}
 ENV INSERT_SIMULATED_DATA=${INSERT_SIMULATED_DATA:-false}
 
+# Install sqlpackage
+RUN apt-get update && apt-get install -y unzip curl && \
+    curl -sSL https://aka.ms/sqlpackage-linux -o /tmp/sqlpackage.zip && \
+    unzip /tmp/sqlpackage.zip -d /opt/sqlpackage && \
+    chmod +x /opt/sqlpackage/sqlpackage && \
+    rm /tmp/sqlpackage.zip && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+ENV PATH=/opt/sqlpackage:$PATH
+
 # Copy in scripts
 COPY docker-entrypoint.sh /
 COPY healthcheck.sh /
