@@ -10,6 +10,7 @@ execute_startup_scripts() {
 	for f in /docker-entrypoint-initdb.d/*; do
 		case "$f" in
 			*.sh)     echo "$0: running $f"; . "$f" ;;
+			*.dacpac) echo "$0: deploying $f"; sqlpackage /Action:Publish /SourceFile:"$f" /TargetServerName:localhost /TargetUser:sa /TargetPassword:"$SA_PASSWORD" /TargetDatabaseName:"$(basename "$f" .dacpac)" /p:AllowIncompatiblePlatform=true /TargetTrustServerCertificate:true; echo ;;
 			*.sql)    echo "$0: running $f"; sqlcmd -S localhost -U sa -C -i "$f"; echo ;;
 			*)        echo "$0: ignoring $f" ;;
 		esac
